@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux"
 import { upvoteAnecdoteById } from "../reducers/anecdoteReducer"
+import { resetNotificationMessage, setNotificationMessage } from "../reducers/notificationReducer"
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector(({filter, anecdotes}) => {
+  const anecdotes = useSelector(({anecdotes, filter}) => {
     if (filter) {
       const filteredAnecdotes = anecdotes.filter(a => a.content.toLowerCase().includes(filter.toLowerCase()))
       return filteredAnecdotes.sort((a,b) => b.votes - a.votes)
@@ -10,10 +11,17 @@ const AnecdoteList = () => {
       return [...anecdotes].sort((a,b) => b.votes - a.votes)
     }
   })
+
   const dispatch = useDispatch()
 
   const vote = (id) => {
     dispatch(upvoteAnecdoteById(id))
+    const anecdote = anecdotes.find(a => a.id === id).content
+    const toastMessage = `You voted for: ${anecdote}`
+    dispatch(setNotificationMessage(toastMessage))
+    setTimeout(() => {
+      dispatch(resetNotificationMessage())
+    }, 5000);
   }
 
   return (
