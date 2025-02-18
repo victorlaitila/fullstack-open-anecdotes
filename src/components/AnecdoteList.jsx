@@ -5,9 +5,9 @@ const AnecdoteList = () => {
   const anecdotes = useSelector(({filter, anecdotes}) => {
     if (filter) {
       const filteredAnecdotes = anecdotes.filter(a => a.content.toLowerCase().includes(filter.toLowerCase()))
-      return filteredAnecdotes.sort((a,b) => b.voters - a.votes)
+      return filteredAnecdotes.sort((a,b) => b.votes - a.votes)
     } else {
-      return anecdotes.sort((a,b) => b.votes - a.votes)
+      return [...anecdotes].sort((a,b) => b.votes - a.votes)
     }
   })
   const dispatch = useDispatch()
